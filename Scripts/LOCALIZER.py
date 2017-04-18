@@ -149,11 +149,46 @@ if __name__ == '__main__':
 
     localizations = []
 
-    try:
-        p = Pool(multiprocessing.cpu_count())
-    except:
-        p = Pool(2)    
-    localizations = p.map(localization.predict_localization, input_list)
+    printed10, printed20, printed30, printed40, printed50 = False, False, False, False, False
+    printed60, printed70, printed80, printed90 = False, False, False, False
+    
+    for i, (seq, full_seq, RESULTS_PATH, OPTION, WEKA_PATH, PEPSTATS_PATH, SCRIPT_PATH) in enumerate(input_list):
+        # The format is: NLS_motifs, bipart_motif, NLStradamus_result, result_chloro_mito
+        localizations.append(localization.predict_localization([seq, full_seq, RESULTS_PATH, OPTION, WEKA_PATH, PEPSTATS_PATH, SCRIPT_PATH]))
+        if float(len(input_list)) > 10.0:
+            if i/float(len(input_list)) > 0.10 and not printed10:
+                print 'Over 10% are done...'
+                printed10 = True
+            if i/float(len(input_list)) > 0.20 and not printed20:
+                print 'Over 20% are done...'
+                printed20 = True
+            if i/float(len(input_list)) > 0.30 and not printed30:
+                print 'Over 30% are done...'
+                printed30 = True
+            if i/float(len(input_list)) > 0.40 and not printed40:
+                print 'Over 40% are done...'
+                printed40 = True
+            if i/float(len(input_list)) > 0.50 and not printed50:
+                print 'Over 50% are done...'
+                printed50 = True
+            if i/float(len(input_list)) > 0.60 and not printed60:
+                print 'Over 60% are done...'
+                printed60 = True
+            if i/float(len(input_list)) > 0.70 and not printed70:
+                print 'Over 70% are done...'
+                printed70 = True
+            if i/float(len(input_list)) > 0.80 and not printed80:
+                print 'Over 80% are done...'
+                printed80 = True
+            if i/float(len(input_list)) > 0.90 and not printed90:
+                print 'Over 90% are done...'
+                printed90 = True  
+
+    #try:
+    #    p = Pool(multiprocessing.cpu_count())
+    #except:
+    #    p = Pool(2)    
+    #localizations = p.map(localization.predict_localization, input_list)
 
     # Do not use sequences with more than 10% unknown bases
     for index, localization in enumerate(localizations):
