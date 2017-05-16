@@ -153,7 +153,7 @@ if __name__ == '__main__':
     printed60, printed70, printed80, printed90 = False, False, False, False
     
     for i, (seq, full_seq, RESULTS_PATH, OPTION, WEKA_PATH, PEPSTATS_PATH, SCRIPT_PATH) in enumerate(input_list):
-        # The format is: NLS_motifs, bipart_motif, NLStradamus_result, result_chloro_mito
+        # The format is: NLS_motifs, bipart_motif, NLStradamus_result, result_chloro_mito        
         localizations.append(localization.predict_localization([seq, full_seq, RESULTS_PATH, OPTION, WEKA_PATH, PEPSTATS_PATH, SCRIPT_PATH]))
         if float(len(input_list)) > 10.0:
             if i/float(len(input_list)) > 0.10 and not printed10:

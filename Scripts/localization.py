@@ -412,7 +412,11 @@ def pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH):
                     charge = float(re.findall("[-+]?\d+.\d+", str(charge_line))[1])
 
                     isoelectric_line = content[start + 4:start + 5]
-                    isoelectric = float(re.findall("\d+.\d+", str(isoelectric_line))[0])
+                    # In rare cases the isoelectric point calculation returns 'None'
+                    try:
+                        isoelectric = float(re.findall("\d+.\d+", str(isoelectric_line))[0])
+                    except: 
+                        isoelectric = 0.0
 
 		            # Watch out, in the pepstats software, if isoelectric point == None, an 
                     # extra line will be introduced
@@ -653,6 +657,25 @@ def predict_localization(input_data):
             # If the probability of a different window is higher
             if result_mito[0][2] > result_mito_coordinates[2]:
                 result_mito_coordinates = [int(result_mito_coordinates[0] + result_mito[0][0]), int(result_mito_coordinates[0] + result_mito[0][1]), result_mito[0][2], result_mito[0][3]]        
+    # -----------------------------------------------------------------------------------------------------------
+    # After re-scanning the intervals there could be the possibility that the dual 
+    # localization has switched from e.g. cTP/possible mTP to mTP/possible cTP
+
+    if result_chloro_mito_coordinates and result_mito_coordinates:
+        # Check that the order is correct for cTP/possible mTP and change if necessary
+        if result_chloro_mito_coordinates[2] < result_mito_coordinates[2]:
+            # cTP becomes possible cTP
+            result_chloro_coordinates = [result_chloro_mito_coordinates[0], result_chloro_mito_coordinates[1], result_chloro_mito_coordinates[2], result_chloro_mito_coordinates[3]]
+            # possible mTP becomes mTP
+            result_chloro_mito_coordinates = [result_mito_coordinates[0], result_mito_coordinates[1], result_mito_coordinates[2], result_mito_coordinates[3]]
+
+    if result_chloro_mito_coordinates and result_chloro_coordinates:
+        # Check that the order is correct for mTP/possible cTP and change if necessary
+        if result_chloro_mito_coordinates[2] < result_chloro_coordinates[2]:
+            # mTP becomes possible mTP
+            result_mito_coordinates = [result_chloro_mito_coordinates[0], result_chloro_mito_coordinates[1], result_chloro_mito_coordinates[2], result_chloro_mito_coordinates[3]]
+            # possible cTP becomes cTP
+            result_chloro_mito_coordinates = [result_chloro_coordinates[0], result_chloro_coordinates[1], result_chloro_coordinates[2], result_chloro_coordinates[3]]
     # -----------------------------------------------------------------------------------------------------------
     # Search for bipartite NLS
     bipart_motif = bipart_NLS(seq)
