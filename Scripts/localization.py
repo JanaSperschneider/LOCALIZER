@@ -464,218 +464,234 @@ def predict_localization(input_data):
     result_chloro_mito = []
     result_chloro = []
     result_mito = []
+    result_chloro_mito_coordinates, result_chloro_coordinates, result_mito_coordinates = [], [], []
     # -----------------------------------------------------------------------------------------------------------
     pepstats_dic_aas = {}
     pepstats_dic_aas_short = {}
     # -----------------------------------------------------------------------------------------------------------
-    # If full sequences are used, only scan from the first amino acids as start position (e.g. in plant proteins)
-    if OPTION == '-p':
-        WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_plantmode(seq, parameters.WINDOW_SIZE, parameters.STEP_SIZE)              
-        if WINDOW_IDS:
-            pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
-            # Now get the data for the first 15 aas
-            WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
-            pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH)      
-            
-    if OPTION == '-e': 
-        WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows(seq, parameters.WINDOW_SIZE, parameters.STEP_SIZE)
-        
-        if WINDOW_IDS:
-            pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
-            # Now get the data for the first 15 aas
-            WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
-            pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH)            
-    # -----------------------------------------------------------------------------------------------------------
-    boxes_predicted = []
-    boxes_predicted_chloro = []
-    boxes_predicted_mito = []
-    # -----------------------------------------------------------------------------------------------------------
-    predicted_chloro = chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)  
-
-    if OPTION == '-e' and len(predicted_chloro) <= 5:
-        predicted_chloro = []
-    
-    for item in predicted_chloro:
-        prob = float(item[1])
-        window_id = item[0]
-        coords = window_id.split('_')
-        coords_start = coords[1]
-        coords_end = coords[2].strip()        
-        if prob > 0.6:   
-            boxes_predicted_chloro.append((float(coords_start), float(coords_end), prob, 0))    
-    # -----------------------------------------------------------------------------------------------------------
-    predicted_mito = mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)                    
-    
-    if OPTION == '-e' and len(predicted_mito) <= 5:
-        predicted_mito = []
-        
-    for item in predicted_mito:
-        prob = float(item[1])
-        window_id = item[0]
-        coords = window_id.split('_')
-        coords_start = coords[1]
-        coords_end = coords[2].strip()       
-        if prob > 0.6:    
-            boxes_predicted_mito.append((float(coords_start), float(coords_end), prob, 1))         
-    # -----------------------------------------------------------------------------------------------------------
-    boxes_predicted += boxes_predicted_chloro
-    boxes_predicted += boxes_predicted_mito
-
-    # Pick the interval for all chloro and mito predictions with highest probability
-    if boxes_predicted: 
-        result_chloro_mito = [max(boxes_predicted, key=itemgetter(2))]
-
-    if boxes_predicted_chloro:
-        result_chloro = [max(boxes_predicted_chloro, key=itemgetter(2))]
-
-    if boxes_predicted_mito:
-        result_mito = [max(boxes_predicted_mito, key=itemgetter(2))]
-
-    # These are the results for potential dual-localization
-    result_chloro = [interval for interval in result_chloro if interval not in result_chloro_mito]
-    result_mito = [interval for interval in result_mito if interval not in result_chloro_mito]
-    
-    # Now map the coordinates from the mature sequence to the full sequence
-    result_chloro_coordinates = map_coordinates(result_chloro, seq, full_seq)
-    result_mito_coordinates = map_coordinates(result_mito, seq, full_seq)
-    result_chloro_mito_coordinates = map_coordinates(result_chloro_mito, seq, full_seq)    
-    # -----------------------------------------------------------------------------------------------------------
-    # Now try and determine the cleavage site by re-scanning the predicted 
-    # transit peptide with smaller windows and step size 1       
-    boxes_predicted = []
-    
-    if result_chloro_mito_coordinates:
-
-        transit_peptide_seq = seq[int(result_chloro_mito[0][0]): int(result_chloro_mito[0][1]) + 1]
-
-        if OPTION == '-e':
-            WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)        
+    if len(seq) >= 20.0:
+        # If full sequences are used, only scan from the first amino acids as start position (e.g. in plant proteins)
         if OPTION == '-p':
-            WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_plantmode_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)  
+            WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_plantmode(seq, parameters.WINDOW_SIZE, parameters.STEP_SIZE)              
+            if WINDOW_IDS:
+                pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
+                # Now get the data for the first 15 aas
+                WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
+                pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH)      
+                
+        if OPTION == '-e': 
+            WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows(seq, parameters.WINDOW_SIZE, parameters.STEP_SIZE)
+            
+            if WINDOW_IDS:
+                pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
+                # Now get the data for the first 15 aas
+                WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
+                pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH)            
+        # -----------------------------------------------------------------------------------------------------------
+        boxes_predicted = []
+        boxes_predicted_chloro = []
+        boxes_predicted_mito = []
+        # -----------------------------------------------------------------------------------------------------------
+        predicted_chloro = chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)  
 
-        if WINDOW_IDS:
-            pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
-            # Now get the data for the first 15 aas
-            WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
-            pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH) 
+        if OPTION == '-e' and len(predicted_chloro) <= 5:
+            predicted_chloro = []
+        
+        for item in predicted_chloro:
+            prob = float(item[1])
+            window_id = item[0]
+            coords = window_id.split('_')
+            coords_start = coords[1]
+            coords_end = coords[2].strip()        
+            if prob > 0.6:   
+                boxes_predicted_chloro.append((float(coords_start), float(coords_end), prob, 0))    
+        # -----------------------------------------------------------------------------------------------------------
+        predicted_mito = mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)                    
 
-            # If the region was a cTP
-            if result_chloro_mito_coordinates[3] == 0:     
-                prediction = chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)  
-            # If the region was a mTP
-            if result_chloro_mito_coordinates[3] == 1:     
-                prediction = mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)                    
+        if OPTION == '-e' and len(predicted_mito) <= 5:
+            predicted_mito = []
+            
+        for item in predicted_mito:
+            prob = float(item[1])
+            window_id = item[0]
+            coords = window_id.split('_')
+            coords_start = coords[1]
+            coords_end = coords[2].strip()       
+            if prob > 0.6:    
+                boxes_predicted_mito.append((float(coords_start), float(coords_end), prob, 1))         
+        # -----------------------------------------------------------------------------------------------------------
+        boxes_predicted += boxes_predicted_chloro
+        boxes_predicted += boxes_predicted_mito
 
-            for item in prediction:
-                prob = item[1]
-                window_id = item[0]
-                coords = window_id.split('_')
-                coords_start = coords[1]
-                coords_end = coords[2].strip()           
+        # Pick the interval for all chloro and mito predictions with highest probability
+        if boxes_predicted: 
+            result_chloro_mito = [max(boxes_predicted, key=itemgetter(2))]
+
+        if boxes_predicted_chloro:
+            result_chloro = [max(boxes_predicted_chloro, key=itemgetter(2))]
+
+        if boxes_predicted_mito:
+            result_mito = [max(boxes_predicted_mito, key=itemgetter(2))]
+
+        # These are the results for potential dual-localization
+        result_chloro = [interval for interval in result_chloro if interval not in result_chloro_mito]
+        result_mito = [interval for interval in result_mito if interval not in result_chloro_mito]
+
+        # Now map the coordinates from the mature sequence to the full sequence
+        result_chloro_coordinates = map_coordinates(result_chloro, seq, full_seq)
+        result_mito_coordinates = map_coordinates(result_mito, seq, full_seq)
+        result_chloro_mito_coordinates = map_coordinates(result_chloro_mito, seq, full_seq)    
+        # -----------------------------------------------------------------------------------------------------------
+        # Now try and determine the cleavage site by re-scanning the predicted 
+        # transit peptide with smaller windows and step size 1       
+        boxes_predicted = []
+        
+        if result_chloro_mito_coordinates:
+
+            transit_peptide_seq = seq[int(result_chloro_mito[0][0]): int(result_chloro_mito[0][1]) + 1]
+
+            if OPTION == '-e':
+                WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)        
+            if OPTION == '-p':
+                WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_plantmode_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)  
+
+            if WINDOW_IDS:
+                pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
+                # Now get the data for the first 15 aas
+                WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
+                pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH) 
+
+                # If the region was a cTP
                 if result_chloro_mito_coordinates[3] == 0:     
-                    boxes_predicted.append((float(coords_start), float(coords_end), prob, 0))   
+                    prediction = chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)  
+                # If the region was a mTP
                 if result_chloro_mito_coordinates[3] == 1:     
+                    prediction = mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)                    
+
+                for item in prediction:
+                    prob = item[1]
+                    window_id = item[0]
+                    coords = window_id.split('_')
+                    coords_start = coords[1]
+                    coords_end = coords[2].strip()           
+                    if result_chloro_mito_coordinates[3] == 0:     
+                        boxes_predicted.append((float(coords_start), float(coords_end), prob, 0))   
+                    if result_chloro_mito_coordinates[3] == 1:     
+                        boxes_predicted.append((float(coords_start), float(coords_end), prob, 1))   
+
+                if boxes_predicted: 
+                    result_chloro_mito = [max(boxes_predicted, key=itemgetter(2))]
+
+                # If the probability of a different window is higher
+                if result_chloro_mito[0][2] > result_chloro_mito_coordinates[2]:
+                    result_chloro_mito_coordinates = [int(result_chloro_mito_coordinates[0] + result_chloro_mito[0][0]), int(result_chloro_mito_coordinates[0] + result_chloro_mito[0][1]), result_chloro_mito[0][2], result_chloro_mito[0][3]]
+        # -----------------------------------------------------------------------------------------------------------
+        # Now try and determine the cleavage site of the dual localization by re-scanning 
+        # the predicted transit peptide with smaller windows and step size 1  
+        boxes_predicted = []
+
+        if result_chloro_coordinates:
+
+            transit_peptide_seq = seq[int(result_chloro[0][0]): int(result_chloro[0][1]) + 1]
+
+            if OPTION == '-e':
+                WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)        
+            if OPTION == '-p':
+                WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_plantmode_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)  
+
+            if WINDOW_IDS:
+                pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
+                # Now get the data for the first 15 aas
+                WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
+                pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH)      
+
+                predicted_chloro = chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)  
+
+                for item in predicted_chloro:
+                    prob = item[1]
+                    window_id = item[0]
+                    coords = window_id.split('_')
+                    coords_start = coords[1]
+                    coords_end = coords[2].strip()           
+                    boxes_predicted.append((float(coords_start), float(coords_end), prob, 0))  
+     
+                if boxes_predicted: 
+                    result_chloro = [max(boxes_predicted, key=itemgetter(2))]
+
+                # If the probability of a different window is higher
+                if result_chloro[0][2] > result_chloro_coordinates[2]:
+                    result_chloro_coordinates = [int(result_chloro_coordinates[0] + result_chloro[0][0]), int(result_chloro_coordinates[0] + result_chloro[0][1]), result_chloro[0][2], result_chloro[0][3]]
+        # -----------------------------------------------------------------------------------------------------------
+        # Now try and determine the cleavage site of the dual localization by re-scanning 
+        # the predicted transit peptide with smaller windows and step size 1 
+        boxes_predicted = []
+
+        if result_mito_coordinates:
+
+            transit_peptide_seq = seq[int(result_mito[0][0]): int(result_mito[0][1]) + 1]
+
+            if OPTION == '-e':
+                WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)        
+            if OPTION == '-p':
+                WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_plantmode_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)  
+
+            if WINDOW_IDS:
+                pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
+                # Now get the data for the first 15 aas
+                WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
+                pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH)
+          
+                predicted_mito = mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)  
+                
+                for item in predicted_mito:
+                    prob = item[1]
+                    window_id = item[0]
+                    coords = window_id.split('_')
+                    coords_start = coords[1]
+                    coords_end = coords[2].strip()           
                     boxes_predicted.append((float(coords_start), float(coords_end), prob, 1))   
 
-            if boxes_predicted: 
-                result_chloro_mito = [max(boxes_predicted, key=itemgetter(2))]
+                if boxes_predicted:     
+                    result_mito = [max(boxes_predicted, key=itemgetter(2))]
 
-            # If the probability of a different window is higher
-            if result_chloro_mito[0][2] > result_chloro_mito_coordinates[2]:
-                result_chloro_mito_coordinates = [int(result_chloro_mito_coordinates[0] + result_chloro_mito[0][0]), int(result_chloro_mito_coordinates[0] + result_chloro_mito[0][1]), result_chloro_mito[0][2], result_chloro_mito[0][3]]
-    # -----------------------------------------------------------------------------------------------------------
-    # Now try and determine the cleavage site of the dual localization by re-scanning 
-    # the predicted transit peptide with smaller windows and step size 1  
-    boxes_predicted = []
+                # If the probability of a different window is higher
+                if result_mito[0][2] > result_mito_coordinates[2]:
+                    result_mito_coordinates = [int(result_mito_coordinates[0] + result_mito[0][0]), int(result_mito_coordinates[0] + result_mito[0][1]), result_mito[0][2], result_mito[0][3]]        
+        # -----------------------------------------------------------------------------------------------------------
+        # After re-scanning the intervals there could be the possibility that the dual 
+        # localization has switched from e.g. cTP/possible mTP to mTP/possible cTP
 
-    if result_chloro_coordinates:
+        if result_chloro_mito_coordinates and result_mito_coordinates:
+            # Check that the order is correct for cTP/possible mTP and change if necessary
+            if result_chloro_mito_coordinates[2] < result_mito_coordinates[2]:
+                # cTP becomes possible cTP
+                result_chloro_coordinates = [result_chloro_mito_coordinates[0], result_chloro_mito_coordinates[1], result_chloro_mito_coordinates[2], result_chloro_mito_coordinates[3]]
+                # possible mTP becomes mTP
+                result_chloro_mito_coordinates = [result_mito_coordinates[0], result_mito_coordinates[1], result_mito_coordinates[2], result_mito_coordinates[3]]
 
-        transit_peptide_seq = seq[int(result_chloro[0][0]): int(result_chloro[0][1]) + 1]
+        if result_chloro_mito_coordinates and result_chloro_coordinates:
+            # Check that the order is correct for mTP/possible cTP and change if necessary
+            if result_chloro_mito_coordinates[2] < result_chloro_coordinates[2]:
+                # mTP becomes possible mTP
+                result_mito_coordinates = [result_chloro_mito_coordinates[0], result_chloro_mito_coordinates[1], result_chloro_mito_coordinates[2], result_chloro_mito_coordinates[3]]
+                # possible cTP becomes cTP
+                result_chloro_mito_coordinates = [result_chloro_coordinates[0], result_chloro_coordinates[1], result_chloro_coordinates[2], result_chloro_coordinates[3]]
+        # -----------------------------------------------------------------------------------------------------------
+        # If the input sequence is shorter than the predicted transit peptides 
+        if result_chloro_mito_coordinates:
+            start, end, prob, classification = result_chloro_mito_coordinates[0], result_chloro_mito_coordinates[1], result_chloro_mito_coordinates[2], result_chloro_mito_coordinates[3]
+            if end > len(seq):
+                result_chloro_mito_coordinates = [start, int(len(seq) - 1.0), prob, classification]
 
-        if OPTION == '-e':
-            WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)        
-        if OPTION == '-p':
-            WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_plantmode_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)  
-
-        if WINDOW_IDS:
-            pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
-            # Now get the data for the first 15 aas
-            WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
-            pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH)      
-
-            predicted_chloro = chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)  
-
-            for item in predicted_chloro:
-                prob = item[1]
-                window_id = item[0]
-                coords = window_id.split('_')
-                coords_start = coords[1]
-                coords_end = coords[2].strip()           
-                boxes_predicted.append((float(coords_start), float(coords_end), prob, 0))  
- 
-            if boxes_predicted: 
-                result_chloro = [max(boxes_predicted, key=itemgetter(2))]
-
-            # If the probability of a different window is higher
-            if result_chloro[0][2] > result_chloro_coordinates[2]:
-                result_chloro_coordinates = [int(result_chloro_coordinates[0] + result_chloro[0][0]), int(result_chloro_coordinates[0] + result_chloro[0][1]), result_chloro[0][2], result_chloro[0][3]]
-    # -----------------------------------------------------------------------------------------------------------
-    # Now try and determine the cleavage site of the dual localization by re-scanning 
-    # the predicted transit peptide with smaller windows and step size 1 
-    boxes_predicted = []
-
-    if result_mito_coordinates:
-
-        transit_peptide_seq = seq[int(result_mito[0][0]): int(result_mito[0][1]) + 1]
-
-        if OPTION == '-e':
-            WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)        
-        if OPTION == '-p':
-            WINDOW_IDS, WINDOW_SEQS = functions.sliding_windows_plantmode_cleavage(transit_peptide_seq, parameters.WINDOW_SIZE_CLEAVAGE, parameters.STEP_SIZE)  
-
-        if WINDOW_IDS:
-            pepstats_dic_aas = pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH)
-            # Now get the data for the first 15 aas
-            WINDOW_SEQS_SHORT = [sequence[:15] for sequence in WINDOW_SEQS]
-            pepstats_dic_aas_short = pepstats_aas(WINDOW_IDS, WINDOW_SEQS_SHORT, TMP_PATH, PEPSTATS_PATH)
-      
-            predicted_mito = mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, WINDOW_IDS, WINDOW_SEQS, TMP_PATH, WEKA_PATH, SCRIPT_PATH)  
-
-            for item in predicted_mito:
-                prob = item[1]
-                window_id = item[0]
-                coords = window_id.split('_')
-                coords_start = coords[1]
-                coords_end = coords[2].strip()           
-                boxes_predicted.append((float(coords_start), float(coords_end), prob, 1))   
-
-            if boxes_predicted:     
-                result_mito = [max(boxes_predicted, key=itemgetter(2))]
-            else:
-                print seq, predicted_mito
-
-            # If the probability of a different window is higher
-            if result_mito[0][2] > result_mito_coordinates[2]:
-                result_mito_coordinates = [int(result_mito_coordinates[0] + result_mito[0][0]), int(result_mito_coordinates[0] + result_mito[0][1]), result_mito[0][2], result_mito[0][3]]        
-    # -----------------------------------------------------------------------------------------------------------
-    # After re-scanning the intervals there could be the possibility that the dual 
-    # localization has switched from e.g. cTP/possible mTP to mTP/possible cTP
-
-    if result_chloro_mito_coordinates and result_mito_coordinates:
-        # Check that the order is correct for cTP/possible mTP and change if necessary
-        if result_chloro_mito_coordinates[2] < result_mito_coordinates[2]:
-            # cTP becomes possible cTP
-            result_chloro_coordinates = [result_chloro_mito_coordinates[0], result_chloro_mito_coordinates[1], result_chloro_mito_coordinates[2], result_chloro_mito_coordinates[3]]
-            # possible mTP becomes mTP
-            result_chloro_mito_coordinates = [result_mito_coordinates[0], result_mito_coordinates[1], result_mito_coordinates[2], result_mito_coordinates[3]]
-
-    if result_chloro_mito_coordinates and result_chloro_coordinates:
-        # Check that the order is correct for mTP/possible cTP and change if necessary
-        if result_chloro_mito_coordinates[2] < result_chloro_coordinates[2]:
-            # mTP becomes possible mTP
-            result_mito_coordinates = [result_chloro_mito_coordinates[0], result_chloro_mito_coordinates[1], result_chloro_mito_coordinates[2], result_chloro_mito_coordinates[3]]
-            # possible cTP becomes cTP
-            result_chloro_mito_coordinates = [result_chloro_coordinates[0], result_chloro_coordinates[1], result_chloro_coordinates[2], result_chloro_coordinates[3]]
+        if result_chloro_coordinates:
+            start, end, prob, classification = result_chloro_coordinates[0], result_chloro_coordinates[1], result_chloro_coordinates[2], result_chloro_coordinates[3]
+            if end > len(seq):
+                result_chloro_coordinates = [start, int(len(seq) - 1.0), prob, classification]
+        
+        if result_mito_coordinates:
+            start, end, prob, classification = result_mito_coordinates[0], result_mito_coordinates[1], result_mito_coordinates[2], result_mito_coordinates[3]
+            if end > len(seq):
+                result_mito_coordinates = [start, int(len(seq) - 1.0), prob, classification]
     # -----------------------------------------------------------------------------------------------------------
     # Search for bipartite NLS
     bipart_motif = bipart_NLS(seq)
