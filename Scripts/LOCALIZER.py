@@ -236,11 +236,24 @@ if __name__ == '__main__':
     summary += ' (' + str(round(100.0*count_mito_chloro_nucleus/PROTEINS_CLASSIFIED,1)) + '%)' + '\n'
     summary += '# Number of proteins with NLS and no transit peptides: '+ str(int(count_nucleus_only))
     summary += ' (' + str(round(100.0*count_nucleus_only/PROTEINS_CLASSIFIED,1)) + '%)'
+    # -----------------------------------------------------------------------------------------------------------
+    summary_collapsed = '# Summary statistics\n\n'
+    summary_collapsed += '# Number of proteins with chloroplast localization (cTP, cTP & possible mTP, cTP & NLS, cTP & possible mTP & NLS): ' + str(int(count_chloro_only) + int(count_chloro_mito) + int(count_chloro_nucleus) + int(count_chloro_mito_nucleus))
+    summary_collapsed += ' (' + str(round(100.0*(int(count_chloro_only) + int(count_chloro_mito) + int(count_chloro_nucleus) + int(count_chloro_mito_nucleus))/PROTEINS_CLASSIFIED,1)) + '%)' + '\n'
+    summary_collapsed += '# Number of proteins with mitochondrial localization (mTP, mTP & possible cTP, mTP & NLS, mTP & possible cTP & NLS): ' + str(int(count_mito_only) + int(count_mito_chloro) + int(count_mito_nucleus) + int(count_mito_chloro_nucleus))
+    summary_collapsed += ' (' + str(round(100.0*(int(count_mito_only) + int(count_mito_chloro) + int(count_mito_nucleus) + int(count_mito_chloro_nucleus))/PROTEINS_CLASSIFIED,1)) + '%)' + '\n'
+    summary_collapsed += '# Number of proteins with nuclear localization and no transit peptides: ' + str(int(count_nucleus_only))
+    summary_collapsed += ' (' + str(round(100.0*(int(count_nucleus_only))/PROTEINS_CLASSIFIED,1)) + '%)'  + '\n'
+    summary_collapsed += '# Number of proteins with nuclear localization and with transit peptides: ' + str(int(count_chloro_nucleus) + int(count_chloro_mito_nucleus) + int(count_mito_nucleus) + int(count_mito_chloro_nucleus))
+    summary_collapsed += ' (' + str(round(100.0*(int(count_chloro_nucleus) + int(count_chloro_mito_nucleus) + int(count_mito_nucleus) + int(count_mito_chloro_nucleus))/PROTEINS_CLASSIFIED,1)) + '%)'
     # -----------------------------------------------------------------------------------------------------------   
     print output_screen
     print '--------------------------------------'
     print '--------------------------------------'
     print summary
+    print '--------------------------------------'
+    print '--------------------------------------'
+    print summary_collapsed
     print '--------------------------------------'
     print '--------------------------------------'
     # -----------------------------------------------------------------------------------------------------------   
