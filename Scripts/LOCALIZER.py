@@ -266,6 +266,9 @@ if __name__ == '__main__':
         f.writelines(summary + '\n')
         f.writelines('#--------------------------------------\n')
         f.writelines('#--------------------------------------\n')
+        f.writelines(summary_collapsed + '\n')
+        f.writelines('#--------------------------------------\n')
+        f.writelines('#--------------------------------------\n')
         f.close()
     # -----------------------------------------------------------------------------------------------------------
     # Clean up and delete temporary folder that was created

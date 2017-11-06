@@ -44,7 +44,7 @@ def usage():
     print '''
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # LOCALIZER :: predicting subcellular localization of plant and eukaryotic effector proteins
-# LOCALIZER 1.0 (September 2016); http://localizer.csiro.au/
+# LOCALIZER 1.0.3 (November 2017); http://localizer.csiro.au/
 # Copyright (C) 2016-2017 Jana Sperschneider, CSIRO.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
