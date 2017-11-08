@@ -128,6 +128,7 @@ if __name__ == '__main__':
     # -----------------------------------------------------------------------------------------------------------
     # Replace ambiguous amino acids and return a list of identfiers that should not be used
     # later: those with more than 10% unknown bases in sequence 
+    ORIGINAL_SEQUENCES = SEQUENCES
     SEQUENCES, BLACKLISTED = functions.filterX(ORIGINAL_IDENTIFIERS, SEQUENCES)
     # -----------------------------------------------------------------------------------------------------------
     # Write new FASTA file with short identifiers for SignalP and pepstats
@@ -196,17 +197,17 @@ if __name__ == '__main__':
             localizations[index] = [], [], [], [], [], []             
     # -----------------------------------------------------------------------------------------------------------
     # Write output FASTA files if user wants this    
-    count_chloro_only = output.chloroplast_only(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
-    count_chloro_mito = output.chloroplast_mitochondria(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
-    count_chloro_mito_nucleus = output.chloroplast_mitochondria_nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
-    count_chloro_nucleus = output.chloroplast_nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
+    count_chloro_only = output.chloroplast_only(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
+    count_chloro_mito = output.chloroplast_mitochondria(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
+    count_chloro_mito_nucleus = output.chloroplast_mitochondria_nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
+    count_chloro_nucleus = output.chloroplast_nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
 
-    count_mito_only = output.mitochondria_only(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
-    count_mito_chloro = output.mitochondria_chloroplast(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
-    count_mito_chloro_nucleus = output.mitochondria_chloroplast_nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
-    count_mito_nucleus = output.mitochondria_nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
+    count_mito_only = output.mitochondria_only(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
+    count_mito_chloro = output.mitochondria_chloroplast(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
+    count_mito_chloro_nucleus = output.mitochondria_chloroplast_nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
+    count_mito_nucleus = output.mitochondria_nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
 
-    count_nucleus_only = output.nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, SEQUENCES, localizations, output_folder)
+    count_nucleus_only = output.nucleus(ORIGINAL_IDENTIFIERS, MATURE_SEQUENCES, ORIGINAL_SEQUENCES, localizations, output_folder)
 
     if output_folder:
         for each_file in os.listdir(output_folder):
