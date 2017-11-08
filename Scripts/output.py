@@ -49,12 +49,12 @@ def result_table(localizations, ORIGINAL_IDENTIFIERS, OPTION):
 
     # Print a result table
     output_screen =  '# -----------------' + '\n'
-    output_screen += '# LOCALIZER 1.0.3 Predictions (' + str(OPTION) + ' mode) \n'
+    output_screen += '# LOCALIZER 1.0.4 Predictions (' + str(OPTION) + ' mode) \n'
     output_screen += '# -----------------' + '\n'
     output_screen += 'Identifier'.ljust(padding_screen) + '\t' + 'Chloroplast'.ljust(18) + '\t' + 'Mitochondria'.ljust(18) + '\t' + 'Nucleus' + '\n'
 
     output_file =  '# -----------------' + '\n'
-    output_file += '# LOCALIZER 1.0.3 Predictions (' + str(OPTION) + ' mode) \n'
+    output_file += '# LOCALIZER 1.0.4 Predictions (' + str(OPTION) + ' mode) \n'
     output_file += '# -----------------' + '\n'
     output_file += 'Identifier'.ljust(padding) + '\t' + 'Chloroplast'.ljust(18) + '\t' + 'Mitochondria'.ljust(18) + '\t' + 'Nucleus' + '\n'
 
