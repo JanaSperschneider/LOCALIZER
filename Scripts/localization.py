@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 """
     LOCALIZER: subcellular localization prediction of plant  
     and effector proteins in the plant cell
@@ -63,7 +63,7 @@ def bipart_NLS(sequence):
     spacer_region = [8,9,10,11,12]
 
     for spacer in spacer_region:
-        for position in xrange(0, len(sequence) - (7 + spacer) + 1, 1):
+        for position in range(0, len(sequence) - (7 + spacer) + 1, 1):
             # Two adjacent basic amino acids (Arg or Lys)
     	    if sequence[position] == 'R' or sequence[position] == 'K':
                 if sequence[position + 1] == 'R' or sequence[position + 1] == 'K':
@@ -124,8 +124,8 @@ def NLStradamus(seq, TMP_PATH, SCRIPT_PATH):
                 sys.exit()
         except:
             e = sys.exc_info()[1]
-            print "Error calling NLStradamus: %s" % e
-            sys.exit()
+            print("Error calling NLStradamus: %s" % e)
+            sys.exit(1)
 
     NLStradamus = []
 
@@ -188,7 +188,7 @@ def chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, IDENT
     with open(weka, 'w') as f:
 
         # Create a list of features for each protein
-        X = [[] for __ in xrange(len(IDENTIFIERS))]
+        X = [[] for __ in range(len(IDENTIFIERS))]
 
         for protein_position, TARGET_ID in enumerate(IDENTIFIERS):
             TARGET_ID = TARGET_ID.replace('>', '')
@@ -227,8 +227,8 @@ def chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, IDENT
                 sys.exit()
         except:
             e = sys.exc_info()[1]
-            print "Error calling WEKA: %s" % e
-            sys.exit()
+            print("Error calling WEKA: %s" % e)
+            sys.exit(1)
 
     file_input = TMP_PATH + 'Chloroplast_Predictions.txt'
     file_output = TMP_PATH + 'Chloroplast_Predictions.fasta'
@@ -244,7 +244,7 @@ def mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, IDENTIF
     with open(weka, 'w') as f:
 
         # Create a list of features for each protein
-        X = [[] for __ in xrange(len(IDENTIFIERS))]
+        X = [[] for __ in range(len(IDENTIFIERS))]
 
         for protein_position, TARGET_ID in enumerate(IDENTIFIERS):
             TARGET_ID = TARGET_ID.replace('>', '')
@@ -283,8 +283,8 @@ def mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, IDENTIF
                 sys.exit()
         except:
             e = sys.exc_info()[1]
-            print "Error calling WEKA: %s" % e
-            sys.exit()
+            print("Error calling WEKA: %s" % e)
+            sys.exit(1)
 
     file_input = TMP_PATH + 'Mitochondria_Predictions.txt'
     file_output = TMP_PATH + 'Mitochondria_Predictions.fasta'
@@ -365,8 +365,8 @@ def pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH):
             sys.exit()
     except:
         e = sys.exc_info()[1]
-        print "Error calling pepstats: %s" % e
-        sys.exit()
+        print("Error calling pepstats: %s" % e)
+        sys.exit(1)
 
     with open(TMP_PATH + 'temp_pepstats.pepstats') as f:         
         content = f.readlines()
@@ -446,9 +446,9 @@ def pepstats_aas(WINDOW_IDS, WINDOW_SEQS, TMP_PATH, PEPSTATS_PATH):
                     pepstats_dic[TARGET_ID] = molecular_weight, charge, isoelectric, amino_acid_classes, amino_acid_frequencies
 
                 else:
-                    print 'There was an error scanning the pepstats file.'
-                    print 'Could not find corresponding sequence for identifier', TARGET_ID
-                    sys.exit()
+                    print('There was an error scanning the pepstats file.')
+                    print('Could not find corresponding sequence for identifier', TARGET_ID)
+                    sys.exit(1)
 
     return pepstats_dic
 # -----------------------------------------------------------------------------------------------------------
