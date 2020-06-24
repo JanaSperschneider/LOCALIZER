@@ -23,7 +23,7 @@ chmod -R 755 LOCALIZER_1.0.4/
 cd LOCALIZER_1.0.4 
 ```
 
-2. For the EMBOSS installation, you need to switch to the Scripts directory and unpack, configure and make. Alternatively, if you are on a computer cluster and EMBOSS is already installed, you can change the variable PEPSTATS_PATH to the EMBOSS location on the machine you are using, then skip this step.
+2. For the EMBOSS installation, you need to switch to the Scripts directory and unpack, configure and make. Alternatively, if you are on a computer cluster and EMBOSS is already installed, you can change the variable PEPSTATS_PATH in the LOCALIZER.py script to the EMBOSS location on the machine you are using.
 ```
 cd Scripts
 tar xvf emboss-latest.tar.gz
