@@ -1,15 +1,16 @@
 #### What is LOCALIZER?
 
-LOCALIZER is a method for predicting the subcellular localization of both plant proteins and pathogen effectors in the plant cell. It can currently predict localization to chloroplasts and mitochondria using transit peptide prediction and to nuclei using a collection of nuclear localization signals (NLSs). 
+LOCALIZER is a machine learning method for predicting the subcellular localization of both plant proteins and pathogen effectors in the plant cell. It can currently predict localization to chloroplasts and mitochondria using transit peptide prediction and to nuclei using a collection of nuclear localization signals (NLSs). 
  
 For plant protein localization prediction, submit full-length sequences and run it in 'plant mode'.
 
 For effector protein localization prediction, submit full-length sequences and run it in 'effector mode'. 
-It is recommended to use tools such as SignalP or Phobius	to predict first if a protein is likely to be secreted and to obtain the mature sequences. Alternatively, provide full sequences and let LOCALIZER delete the first 20 aas as the signal peptide region.
+It is recommended to use tools such as SignalP or Phobius	to predict first if a protein is likely to be secreted and to obtain the mature sequences. Alternatively, provide full sequences and let LOCALIZER delete the first 20 aas as the putative signal peptide region.
 
 Do not submit short sequence fragments to LOCALIZER, it expects the full protein sequences. 
 
 You can submit your proteins of interest to the webserver at http://localizer.csiro.au/ or install it locally.
+All training and evaluation data can be found [here](http://localizer.csiro.au/data.html).
 
 #### Installing LOCALIZER
 LOCALIZER has been written in Python and uses pepstats from the EMBOSS software and the WEKA 3.6 software. It also requires that you have Perl and BioPython installed. **LOCALIZER from version 1.0.4 inclusive uses Python 3.** 
