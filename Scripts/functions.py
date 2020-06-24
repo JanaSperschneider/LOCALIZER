@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 """
     LOCALIZER: subcellular localization prediction of plant  
     and effector proteins in the plant cell
@@ -41,31 +41,31 @@ def usage():
     
         Return:   Print options for running LOCALIZER.       
     """
-    print '''
+    print('''
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # LOCALIZER :: predicting subcellular localization of plant and eukaryotic effector proteins
 # LOCALIZER 1.0.3 (November 2017); http://localizer.csiro.au/
 # Copyright (C) 2016-2017 Jana Sperschneider, CSIRO.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    '''
-    print "Usage for LOCALIZER: ", 
-    print "python LOCALIZER.py [-options] -i <input_file>"
-    print 
-    print
-    print "required option:"
-    print "    -p      : Run in plant mode. This means LOCALIZER will search for transit peptides starting at the first amino acid."
-    print "  OR"
-    print "    -e      : Run in effector mode. This means LOCALIZER will search for transit peptides after the signal peptide has been removed."
-    print
-    print "other options in effector mode:"    
-    print "    -M      : in effector mode, do not remove the signal peptide. Use this if you are providing mature effector sequences."
-    print "    -S <x>  : in effector mode, remove the signal peptide by deleting the first x aas (default: 20)."
-    print
-    print "other options:"    
-    print "    -o <f>  : save a tab-separated output table (Results.txt) and proteins with predicted localizations to FASTA files in folder <f>"        
-    print "    -h      : show brief help on version and usage"     
-    print
+    ''')
+    print("Usage for LOCALIZER: ")
+    print("python LOCALIZER.py [-options] -i <input_file>")
+    print()
+    print()
+    print("required option:")
+    print("    -p      : Run in plant mode. This means LOCALIZER will search for transit peptides starting at the first amino acid.")
+    print("  OR")
+    print("    -e      : Run in effector mode. This means LOCALIZER will search for transit peptides after the signal peptide has been removed.")
+    print()
+    print("other options in effector mode:")
+    print("    -M      : in effector mode, do not remove the signal peptide. Use this if you are providing mature effector sequences.")
+    print("    -S <x>  : in effector mode, remove the signal peptide by deleting the first x aas (default: 20).")
+    print()
+    print("other options:") 
+    print("    -o <f>  : save a tab-separated output table (Results.txt) and proteins with predicted localizations to FASTA files in folder <f>")
+    print("    -h      : show brief help on version and usage")
+    print()
     sys.exit()    
 
     return
@@ -83,7 +83,7 @@ def scan_arguments(commandline):
         opts, args = getopt.getopt(commandline, "peMhS:o:i:", ["help"])        
     except getopt.GetoptError as err:
         # print help information and exit:
-        print str(err) # will print something like "option -a not recognized"
+        print(str(err))  # will print something like "option -a not recognized"
         usage()
         sys.exit(2)
 
@@ -135,27 +135,27 @@ def scan_arguments(commandline):
         usage()
 
     if SP_length and noSP_option:
-        print '''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'''
-        print '''You have specified that mature sequences are provided with '-M' AND that the first ''', SP_length, '''aas should be deleted as the signal peptide region with '-S'.'''
-        print
-        print '''Please use only one of these arguments.'''
-        print '''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'''
-        usage()    
+        print('''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -''')
+        print('''You have specified that mature sequences are provided with '-M' AND that the first ''', SP_length, '''aas should be deleted as the signal peptide region with '-S'.''')
+        print()
+        print('''Please use only one of these arguments.''')
+        print('''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -''')
+        usage()
 
     if SP_length and OPTION == "-p":
-        print '''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'''
-        print '''You have specified that the first ''', SP_length, '''aas should be deleted as the signal peptide region with '-S'.'''
-        print
-        print '''Please use effector mode '-e' and not plant mode 'p'.'''
-        print '''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'''
-        usage()    
+        print('''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -''')
+        print('''You have specified that the first ''', SP_length, '''aas should be deleted as the signal peptide region with '-S'.''')
+        print()
+        print('''Please use effector mode '-e' and not plant mode 'p'.''')
+        print('''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -''')
+        usage()
 
     if noSP_option and OPTION == "-p":
-        print '''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'''
-        print '''You have specified that mature effector sequences are provided with '-M'.'''
-        print
-        print '''Please use effector mode '-e' and not plant mode 'p'.'''
-        print '''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'''
+        print('''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -''')
+        print('''You have specified that mature effector sequences are provided with '-M'.''')
+        print()
+        print('''Please use effector mode '-e' and not plant mode 'p'.''')
+        print('''# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -''')
         usage()    
 
     return FASTA_FILE, OPTION, noSP_option, SP_length, output_folder
@@ -307,7 +307,7 @@ def sliding_windows(seq, WINDOW_SIZES, STEP_SIZE):
 
     for WINDOW_SIZE in WINDOW_SIZES:
 
-        for START in xrange(0, int(TransitPeptide_STOP) + 1, STEP_SIZE):
+        for START in range(0, int(TransitPeptide_STOP) + 1, STEP_SIZE):
 
             window_seq = seq[START:START + WINDOW_SIZE]
 
@@ -328,7 +328,7 @@ def sliding_windows_cleavage(seq, WINDOW_SIZES, STEP_SIZE):
 
     for WINDOW_SIZE in WINDOW_SIZES:
 
-        for START in xrange(0, len(seq), STEP_SIZE):
+        for START in range(0, len(seq), STEP_SIZE):
 
             window_seq = seq[START:START + WINDOW_SIZE]
 

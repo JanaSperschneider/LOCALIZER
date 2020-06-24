@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 """
     LOCALIZER: subcellular localization prediction of plant  
     and effector proteins in the plant cell
@@ -60,20 +60,20 @@ if __name__ == '__main__':
     # Check that the path to the WEKA software exists
     path_exists = os.access(WEKA_PATH, os.F_OK)
     if not path_exists:
-        print
-        print "Path to WEKA software does not exist!"
-        print "Check the installation and the given path to the WEKA software %s in LOCALIZER.py (line 62)."%WEKA_PATH
-        print
-        sys.exit()
+        print()
+        print("Path to WEKA software does not exist!")
+        print("Check the installation and the given path to the WEKA software %s in LOCALIZER.py (line 62)." % WEKA_PATH)
+        print()
+        sys.exit(1)
     # -----------------------------------------------------------------------------------------------------------
     # Check that the path to the EMBOSS software exists for pepstats
     path_exists = os.access(PEPSTATS_PATH, os.F_OK)
     if not path_exists:
-        print
-        print "Path to EMBOSS software does not exist!"
-        print "Check the installation and the given path to the EMBOSS software %s in LOCALIZER.py (line 63)."%PEPSTATS_PATH
-        print
-        sys.exit()
+        print()
+        print("Path to EMBOSS software does not exist!")
+        print("Check the installation and the given path to the EMBOSS software %s in LOCALIZER.py (line 63)." % PEPSTATS_PATH)
+        print()
+        sys.exit(1)
     # -----------------------------------------------------------------------------------------------------------
     commandline = sys.argv[1:]
     # -----------------------------------------------------------------------------------------------------------
@@ -81,12 +81,12 @@ if __name__ == '__main__':
         FASTA_FILE, OPTION, noSP_option, SP_length, output_folder = functions.scan_arguments(commandline)
         # If no FASTA file was provided with the -i option
         if not FASTA_FILE:
-            print
-            print 'Please specify a FASTA input file using the -i option!'
+            print()
+            print('Please specify a FASTA input file using the -i option!')
             functions.usage()
         if not OPTION:
-            print
-            print 'Please specify either plant (-p) or effector (-e) mode!'
+            print()
+            print('Please specify either plant (-p) or effector (-e) mode!')
             functions.usage()
     else:
         functions.usage()
@@ -102,10 +102,10 @@ if __name__ == '__main__':
     # Check if FASTA file exists
     try:
         open(FASTA_FILE, 'r') 
-    except IOError as (errno, strerror):
-        print "Unable to open FASTA file:", FASTA_FILE  #Does not exist OR no read permissions
-        print "I/O error({0}): {1}".format(errno, strerror)
-        sys.exit()
+    except OSError as e:
+        print("Unable to open FASTA file:", FASTA_FILE)  #Does not exist OR no read permissions
+        print("I/O error({0}): {1}".format(e.errno, e.strerror))
+        sys.exit(1)
     # -----------------------------------------------------------------------------------------------------------
     # Try to create folder where results will be stored
     try:
@@ -158,31 +158,31 @@ if __name__ == '__main__':
         localizations.append(localization.predict_localization([seq, full_seq, RESULTS_PATH, OPTION, WEKA_PATH, PEPSTATS_PATH, SCRIPT_PATH]))
         if float(len(input_list)) > 10.0:
             if i/float(len(input_list)) > 0.10 and not printed10:
-                print 'Over 10% are done...'
+                print('Over 10% are done...')
                 printed10 = True
             if i/float(len(input_list)) > 0.20 and not printed20:
-                print 'Over 20% are done...'
+                print('Over 20% are done...')
                 printed20 = True
             if i/float(len(input_list)) > 0.30 and not printed30:
-                print 'Over 30% are done...'
+                print('Over 30% are done...')
                 printed30 = True
             if i/float(len(input_list)) > 0.40 and not printed40:
-                print 'Over 40% are done...'
+                print('Over 40% are done...')
                 printed40 = True
             if i/float(len(input_list)) > 0.50 and not printed50:
-                print 'Over 50% are done...'
+                print('Over 50% are done...')
                 printed50 = True
             if i/float(len(input_list)) > 0.60 and not printed60:
-                print 'Over 60% are done...'
+                print('Over 60% are done...')
                 printed60 = True
             if i/float(len(input_list)) > 0.70 and not printed70:
-                print 'Over 70% are done...'
+                print('Over 70% are done...')
                 printed70 = True
             if i/float(len(input_list)) > 0.80 and not printed80:
-                print 'Over 80% are done...'
+                print('Over 80% are done...')
                 printed80 = True
             if i/float(len(input_list)) > 0.90 and not printed90:
-                print 'Over 90% are done...'
+                print('Over 90% are done...')
                 printed90 = True  
 
     #try:
@@ -248,15 +248,15 @@ if __name__ == '__main__':
     summary_collapsed += '# Number of proteins with nuclear localization and with transit peptides: ' + str(int(count_chloro_nucleus) + int(count_chloro_mito_nucleus) + int(count_mito_nucleus) + int(count_mito_chloro_nucleus))
     summary_collapsed += ' (' + str(round(100.0*(int(count_chloro_nucleus) + int(count_chloro_mito_nucleus) + int(count_mito_nucleus) + int(count_mito_chloro_nucleus))/PROTEINS_CLASSIFIED,1)) + '%)'
     # -----------------------------------------------------------------------------------------------------------   
-    print output_screen
-    print '--------------------------------------'
-    print '--------------------------------------'
-    print summary
-    print '--------------------------------------'
-    print '--------------------------------------'
-    print summary_collapsed
-    print '--------------------------------------'
-    print '--------------------------------------'
+    print(output_screen)
+    print('--------------------------------------')
+    print('--------------------------------------')
+    print(summary)
+    print('--------------------------------------')
+    print('--------------------------------------')
+    print(summary_collapsed)
+    print('--------------------------------------')
+    print('--------------------------------------')
     # -----------------------------------------------------------------------------------------------------------   
     if output_folder:
         f_output = output_folder + '/Results.txt'
