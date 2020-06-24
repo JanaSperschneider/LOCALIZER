@@ -9,9 +9,12 @@ It is recommended to use tools such as SignalP or Phobius	to predict first if a 
 
 Do not submit short sequence fragments to LOCALIZER, it expects the full sequence. 
  
-#### Citation for LOCALIZER:
+#### Installing LOCALIZER
+LOCALIZER has been written in Python and uses pepstats from the EMBOSS software and the WEKA 3.6 software. It also requires that you have Perl and BioPython installed. 
 
-Sperschneider, J., Catanzariti, A., DeBoer, K. et al. LOCALIZER: subcellular localization prediction of both plant and effector proteins in the plant cell. Sci Rep 7, 44598 (2017) doi:10.1038/srep44598
+LOCALIZER from version 1.0.4 inclusive uses Python 3. 
+
+To get LOCALIZER to work on your local machine, you need to install the EMBOSS and WEKA softwares from source. Both are already provided in the LOCALIZER distribution to ensure that compatible versions are used. Alternatively, if you are on a computer cluster and EMBOSS is already installed, you can change the variable PEPSTATS_PATH to the EMBOSS location on the machine you are using.
 
 #### Running LOCALIZER
 
@@ -21,3 +24,7 @@ Alternatively, you can install LOCALIZER on your machine to run it locally.
 For detailed installation instructions see here: http://localizer.csiro.au/software.html
 
 For help on how to interpret the output format, see http://localizer.csiro.au/output.html
+
+#### Citation for LOCALIZER:
+
+Sperschneider, J., Catanzariti, A., DeBoer, K. et al. LOCALIZER: subcellular localization prediction of both plant and effector proteins in the plant cell. Sci Rep 7, 44598 (2017) doi:10.1038/srep44598
