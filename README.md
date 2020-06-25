@@ -14,9 +14,9 @@ To get LOCALIZER to work on your local machine, you need to install the EMBOSS a
 
 1. Make sure LOCALIZER has the permission to execute. Then unpack LOCALIZER in your desired location
 ```
-tar xvf LOCALIZER_1.0.5.tar.gz
-chmod -R 755 LOCALIZER_1.0.5/
-cd LOCALIZER_1.0.5
+tar xvf LOCALIZER-1.0.5.tar.gz
+chmod -R 755 LOCALIZER-1.0.5/
+cd LOCALIZER-1.0.5
 ```
 
 2. For the EMBOSS installation, you need to switch to the Scripts directory and unpack, configure and make. Alternatively, if you are on a computer cluster and EMBOSS is already installed, you can change the variable PEPSTATS_PATH in the LOCALIZER.py script to the EMBOSS location on the machine you are using.
