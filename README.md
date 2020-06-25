@@ -2,13 +2,6 @@
 
 LOCALIZER is a machine learning method for predicting the subcellular localization of both plant proteins and pathogen effectors in the plant cell. It can currently predict localization to chloroplasts and mitochondria using transit peptide prediction and to nuclei using a collection of nuclear localization signals (NLSs). 
  
-For plant protein localization prediction, submit full-length sequences and run it in 'plant mode'.
-
-For effector protein localization prediction, submit full-length sequences and run it in 'effector mode'. 
-It is recommended to use tools such as SignalP or Phobius	to predict first if a protein is likely to be secreted and to obtain the mature sequences. Alternatively, provide full sequences and let LOCALIZER delete the first 20 aas as the putative signal peptide region.
-
-Do not submit short sequence fragments to LOCALIZER, it expects the full protein sequences. 
-
 You can submit your proteins of interest to the webserver at http://localizer.csiro.au/ or install it locally.
 All training and evaluation data can be found [here](http://localizer.csiro.au/data.html).
 
@@ -55,7 +48,25 @@ pip install biopython
 
 Note also that you need PERL to be installed on your computer for running NLStradamus. 
 
-#### Running LOCALIZER
+#### Running LOCALIZER on plant data
+For plant protein localization prediction, submit full-length sequences and run it in 'plant mode' (option -p). Do not submit short sequence fragments to LOCALIZER, it expects the full protein sequences. 
+
+```
+python LOCALIZER.py -p -i Plant_Testing.fasta
+```
+
+LOCALIZER will then search for transit peptides in the N-terminus and for nuclear localization signals in the sequence. 
+
+#### Running LOCALIZER on effector data
+For effector protein localization prediction, submit full-length sequences and run it in 'effector mode' (option -e). Do not submit short sequence fragments to LOCALIZER, it expects the full protein sequences. 
+
+It is recommended to use tools such as SignalP or Phobius	to predict first if a protein is likely to be secreted and to obtain the mature sequences without the signal peptide. Alternatively, provide full sequences and let LOCALIZER delete the first 20 aas as the putative signal peptide region.
+
+```
+python LOCALIZER.py -e -i Effector_Testing.fasta
+```
+
+#### LOCALIZER output format
 Run this to get a feel for the output format:
 ```
 python LOCALIZER.py -e -i Effector_Testing.fasta
@@ -96,7 +107,6 @@ ToxA            Y (0.877 | 62-130)      -                       -
 LOCALIZER will return the output as shown in the example above. First, a summary table will be shown which shows the predictions (chloroplast, mitochondria or nucleus) for each submitted protein. If a transit peptide is predicted, the start and end positions in the submitted sequences are shown, alongside the probability. In this example, ToxA has a predicted chloroplast transit peptide with probability 0.885 at position 62-130 in its sequence. LOCALIZER does not return a probability for nucleus localization, because it uses a simple NLS search. In this example, LOCALIZER found a NLS in CRN15, i.e. the sequence KRKR.
 
 In the summary statistic, we count LOCALIZER predictions that are 'chloroplast', 'chloroplast and possible mitochondrial', 'chloroplast and nucleus' and 'chloroplast & possible mitochondrial and nucleus' as chloroplast predictions (same strategy for mitochondrial predictions). A protein that carries a predicted transit peptide with an additional predicted NLS might have experimental evidence only for one of those locations due to the technical hurdles of recognizing dual targeting and should thus not necessarily be counted as a false positive prediction. However, in the LOCALIZER paper, a protein was counted as a nucleus prediction only if it has the category 'nucleus' to avoid assigning a protein to multiple predictions in the evaluation and this is what we recommend. 
-
 
 #### Citation for LOCALIZER:
 
