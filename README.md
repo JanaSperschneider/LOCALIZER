@@ -6,7 +6,7 @@ You can submit your proteins of interest to the webserver at http://localizer.cs
 All training and evaluation data can be found [here](http://localizer.csiro.au/data.html).
 
 #### Installing LOCALIZER
-LOCALIZER has been written in Python and uses pepstats from the EMBOSS software and the WEKA 3.6 software. It also requires that you have Perl and BioPython installed. **LOCALIZER from version 1.0.4 inclusive uses Python 3.** 
+LOCALIZER has been written in Python and uses pepstats from the EMBOSS software and the WEKA 3.6 software. It also requires that you have Perl and BioPython installed. **LOCALIZER from version 1.0.5 inclusive uses Python 3.** 
 
 To get LOCALIZER to work on your local machine, you need to install the EMBOSS and WEKA softwares from source. Both are already provided in the LOCALIZER distribution to ensure that compatible versions are used. 
 
@@ -14,9 +14,9 @@ To get LOCALIZER to work on your local machine, you need to install the EMBOSS a
 
 1. Make sure LOCALIZER has the permission to execute. Then unpack LOCALIZER in your desired location
 ```
-tar xvf LOCALIZER_1.0.4.tar.gz
-chmod -R 755 LOCALIZER_1.0.4/
-cd LOCALIZER_1.0.4 
+tar xvf LOCALIZER_1.0.5.tar.gz
+chmod -R 755 LOCALIZER_1.0.5/
+cd LOCALIZER_1.0.5
 ```
 
 2. For the EMBOSS installation, you need to switch to the Scripts directory and unpack, configure and make. Alternatively, if you are on a computer cluster and EMBOSS is already installed, you can change the variable PEPSTATS_PATH in the LOCALIZER.py script to the EMBOSS location on the machine you are using.
@@ -80,7 +80,7 @@ Run this to get a feel for the output format:
 python LOCALIZER.py -e -i Effector_Testing.fasta
 
 # -----------------
-# LOCALIZER 1.0.4 Predictions (-e mode)
+# LOCALIZER 1.0.5 Predictions (-e mode)
 # -----------------
 Identifier      Chloroplast             Mitochondria            Nucleus
 CRN15           -                       -                       Y (KRKR)
