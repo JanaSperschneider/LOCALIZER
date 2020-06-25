@@ -10,6 +10,8 @@ LOCALIZER has been written in Python and uses pepstats from the EMBOSS software 
 
 To get LOCALIZER to work on your local machine, you need to install the EMBOSS and WEKA softwares from source. Both are already provided in the LOCALIZER distribution to ensure that compatible versions are used. 
 
+0. Download the latest release from this github repo (or alternatively you can clone the github repo and skip step 1).
+
 1. Make sure LOCALIZER has the permission to execute. Then unpack LOCALIZER in your desired location
 ```
 tar xvf LOCALIZER_1.0.4.tar.gz
@@ -64,6 +66,12 @@ It is recommended to use tools such as SignalP or Phobius	to predict first if a 
 
 ```
 python LOCALIZER.py -e -i Effector_Testing.fasta
+```
+
+You can set how LOCALIZER treats the signal peptide region with these options:
+```
+    -M      : in effector mode, do not remove the signal peptide. Use this if you are providing mature effector sequences.
+    -S <x>  : in effector mode, remove the signal peptide by deleting the first x aas (default: 20).
 ```
 
 #### LOCALIZER output format
