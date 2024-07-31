@@ -6,7 +6,7 @@ You can submit your proteins of interest to the webserver at http://localizer.cs
 All training and evaluation data can be found [here](http://localizer.csiro.au/data.html).
 
 #### Installing LOCALIZER
-LOCALIZER has been written in Python and uses pepstats from the EMBOSS software and the WEKA 3.6 software. It also requires that you have Perl and BioPython installed. **LOCALIZER from version 1.0.5 inclusive uses Python 3.** 
+LOCALIZER has been written in Python and uses pepstats from the EMBOSS software and the WEKA 3.6 software. It also requires that you have Perl installed. **LOCALIZER from version 1.0.5 inclusive uses Python 3.** 
 
 To get LOCALIZER to work on your local machine, you need to install the EMBOSS and WEKA softwares from source. Both are already provided in the LOCALIZER distribution to ensure that compatible versions are used. 
 
@@ -42,11 +42,6 @@ python LOCALIZER.py -e -i Effector_Testing.fasta
 ```
 
 5. Problems?
-
-If you are getting an error message like 'ImportError: No module named Bio', you need to install BioPython on your computer. See [here](https://biopython.org/wiki/Download) for help. For example, you can try and run:
-```
-pip install biopython
-```
 
 Note also that you need PERL to be installed on your computer for running NLStradamus. 
 
