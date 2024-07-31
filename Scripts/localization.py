@@ -33,8 +33,8 @@ import re
 import parameters
 from operator import itemgetter
 
-from Bio import SeqIO
-from Bio.SeqUtils import ProtParam
+#from Bio import SeqIO
+#from Bio.SeqUtils import ProtParam
 # -----------------------------------------------------------------------------------------------------------
 def GRAVY(sequence):
     # The GRAVY value for a peptide or protein is calculated as the sum of 
@@ -197,11 +197,21 @@ def chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, IDENT
 
             molecular_weight, charge, isoelectric, amino_acid_classes, amino_acid_frequencies = pepstats_dic_aas[TARGET_ID]
 
-            prot = ProtParam.ProteinAnalysis(sequence.replace('*',''))            
+            #prot = ProtParam.ProteinAnalysis(sequence.replace('*',''))            
             
             molecular_weight_short, charge_short, isoelectric_short, amino_acid_classes_short, amino_acid_frequencies_short = pepstats_dic_aas_short[TARGET_ID]
 
-            X[protein_position] = [charge, isoelectric] + amino_acid_classes + amino_acid_frequencies + [GRAVY(sequence)] + [prot.secondary_structure_fraction()[0], prot.secondary_structure_fraction()[1], prot.secondary_structure_fraction()[2], prot.aromaticity()] + [charge_short, isoelectric_short] + amino_acid_frequencies_short   
+	    helix = (sequence.count('V') + sequence.count('I') + sequence.count('Y') + sequence.count('F') + sequence.count('W') + sequence.count('L'))/len(sequence.replace('*',''))
+            turn = (sequence.count('N') + sequence.count('P') + sequence.count('G') + sequence.count('S'))/len(sequence.replace('*',''))
+            sheet = (sequence.count('E') + sequence.count('M') + sequence.count('A') + sequence.count('L'))/len(sequence.replace('*',''))
+
+            aromaticity = sequence.count('F')/len(sequence.replace('*',''))
+            aromaticity += sequence.count('W')/len(sequence.replace('*',''))
+            aromaticity += sequence.count('Y')/len(sequence.replace('*',''))
+
+            X[protein_position] = [charge, isoelectric] + amino_acid_classes + amino_acid_frequencies + [GRAVY(sequence)] + [helix, turn, sheet, aromaticity] + [charge_short, isoelectric_short] + amino_acid_frequencies_short
+
+            #X[protein_position] = [charge, isoelectric] + amino_acid_classes + amino_acid_frequencies + [GRAVY(sequence)] + [prot.secondary_structure_fraction()[0], prot.secondary_structure_fraction()[1], prot.secondary_structure_fraction()[2], prot.aromaticity()] + [charge_short, isoelectric_short] + amino_acid_frequencies_short   
 
         f.writelines(parameters.ARFF_CHLOROPLAST_HEADER)
         for index, vector in enumerate(X):
@@ -253,11 +263,21 @@ def mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, IDENTIF
 
             molecular_weight, charge, isoelectric, amino_acid_classes, amino_acid_frequencies = pepstats_dic_aas[TARGET_ID]
 
-            prot = ProtParam.ProteinAnalysis(sequence.replace('*',''))
+            #prot = ProtParam.ProteinAnalysis(sequence.replace('*',''))
 
             molecular_weight_short, charge_short, isoelectric_short, amino_acid_classes_short, amino_acid_frequencies_short = pepstats_dic_aas_short[TARGET_ID]
 
-            X[protein_position] = [charge, isoelectric] + amino_acid_classes + amino_acid_frequencies + [GRAVY(sequence)] + [prot.secondary_structure_fraction()[0], prot.secondary_structure_fraction()[1], prot.secondary_structure_fraction()[2], prot.aromaticity()] + [charge_short, isoelectric_short] + amino_acid_frequencies_short  
+	    helix = (sequence.count('V') + sequence.count('I') + sequence.count('Y') + sequence.count('F') + sequence.count('W') + sequence.count('L'))/len(sequence.replace('*',''))
+            turn = (sequence.count('N') + sequence.count('P') + sequence.count('G') + sequence.count('S'))/len(sequence.replace('*',''))
+            sheet = (sequence.count('E') + sequence.count('M') + sequence.count('A') + sequence.count('L'))/len(sequence.replace('*',''))
+
+            aromaticity = sequence.count('F')/len(sequence.replace('*',''))
+            aromaticity += sequence.count('W')/len(sequence.replace('*',''))
+            aromaticity += sequence.count('Y')/len(sequence.replace('*',''))
+
+            X[protein_position] = [charge, isoelectric] + amino_acid_classes + amino_acid_frequencies + [GRAVY(sequence)] + [helix, turn, sheet, aromaticity] + [charge_short, isoelectric_short] + amino_acid_frequencies_short
+
+            #X[protein_position] = [charge, isoelectric] + amino_acid_classes + amino_acid_frequencies + [GRAVY(sequence)] + [prot.secondary_structure_fraction()[0], prot.secondary_structure_fraction()[1], prot.secondary_structure_fraction()[2], prot.aromaticity()] + [charge_short, isoelectric_short] + amino_acid_frequencies_short  
  
         f.writelines(parameters.ARFF_MITOCHONDRIA_HEADER)
         for index, vector in enumerate(X):
