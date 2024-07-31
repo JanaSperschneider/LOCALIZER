@@ -201,7 +201,7 @@ def chloro_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, IDENT
             
             molecular_weight_short, charge_short, isoelectric_short, amino_acid_classes_short, amino_acid_frequencies_short = pepstats_dic_aas_short[TARGET_ID]
 
-	    helix = (sequence.count('V') + sequence.count('I') + sequence.count('Y') + sequence.count('F') + sequence.count('W') + sequence.count('L'))/len(sequence.replace('*',''))
+            helix = (sequence.count('V') + sequence.count('I') + sequence.count('Y') + sequence.count('F') + sequence.count('W') + sequence.count('L'))/len(sequence.replace('*',''))
             turn = (sequence.count('N') + sequence.count('P') + sequence.count('G') + sequence.count('S'))/len(sequence.replace('*',''))
             sheet = (sequence.count('E') + sequence.count('M') + sequence.count('A') + sequence.count('L'))/len(sequence.replace('*',''))
 
@@ -267,7 +267,7 @@ def mito_classifier_allwindows(pepstats_dic_aas, pepstats_dic_aas_short, IDENTIF
 
             molecular_weight_short, charge_short, isoelectric_short, amino_acid_classes_short, amino_acid_frequencies_short = pepstats_dic_aas_short[TARGET_ID]
 
-	    helix = (sequence.count('V') + sequence.count('I') + sequence.count('Y') + sequence.count('F') + sequence.count('W') + sequence.count('L'))/len(sequence.replace('*',''))
+            helix = (sequence.count('V') + sequence.count('I') + sequence.count('Y') + sequence.count('F') + sequence.count('W') + sequence.count('L'))/len(sequence.replace('*',''))
             turn = (sequence.count('N') + sequence.count('P') + sequence.count('G') + sequence.count('S'))/len(sequence.replace('*',''))
             sheet = (sequence.count('E') + sequence.count('M') + sequence.count('A') + sequence.count('L'))/len(sequence.replace('*',''))
 
